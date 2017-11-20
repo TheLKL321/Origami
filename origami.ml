@@ -23,7 +23,8 @@ let sq x = x * x
 (** Zwraca kartkę, reprezentującą kółko domknięte o środku w punkcie [p] i promieniu [r] *)
 let kolko (xs, ys) r =
   let kartka (x, y) =
-    if (x -. xs)
+    if (sq (x -. xs)) + (sq (y -. ys)) <= sq r then 1
+    else 0
 
 (** Składa kartkę [k] wzdłuż prostej przechodzącej prze
     punkty [p1] i [p2] (muszą to być różne punkty). Papier jest składany
@@ -35,6 +36,7 @@ let kolko (xs, ys) r =
     tyle co przed złożeniem plus przebicie rozłożonej kartki w punkcie,
     który nałożył się na punkt przebicia. *)
 let zlozPara k (p1, p2) =
+  if 
 
 
 (** Wywołuje zlozPara odpowiednio dopasowując argumenty *)
