@@ -44,6 +44,7 @@ let symetria p prost =
 let zlozPara k ((x1, y1), (x2, y2)) =
   if x1 = x2 then
     (* pion *)
+    (* TODO: JAK JESTEŚ PO ZŁEJ STRONIE PROSTEJ TO NIE ODBIJASZ *)
   else if x1 < x2 then
     (* mniejsze od funkcji *)
   else
