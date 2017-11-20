@@ -26,6 +26,12 @@ let kolko (xs, ys) r =
     if (sq (x -. xs)) + (sq (y -. ys)) <= sq r then 1
     else 0
 
+(** Zwraca prostą zawierającą różne od siebie punkty p1 i p2  *)
+let prosta p1 p2 =
+
+(** Zwraca symetryczne odbicie punktu p względem prostej prost  *)
+let symetria p prost =
+
 (** Składa kartkę [k] wzdłuż prostej przechodzącej prze
     punkty [p1] i [p2] (muszą to być różne punkty). Papier jest składany
     w ten sposób, że z prawej strony prostej (patrząc w kierunku od [p1] do [p2])
@@ -35,8 +41,13 @@ let kolko (xs, ys) r =
     co przebicie kartki przed złożeniem. Po stronie lewej -
     tyle co przed złożeniem plus przebicie rozłożonej kartki w punkcie,
     który nałożył się na punkt przebicia. *)
-let zlozPara k (p1, p2) =
-  if 
+let zlozPara k ((x1, y1), (x2, y2)) =
+  if x1 = x2 then
+    (* pion *)
+  else if x1 < x2 then
+    (* mniejsze od funkcji *)
+  else
+    (* większe od funkcji *)
 
 
 (** Wywołuje zlozPara odpowiednio dopasowując argumenty *)
