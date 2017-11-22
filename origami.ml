@@ -23,7 +23,14 @@ let sq x = x * x
 (** Zwraca kartkę, reprezentującą kółko domknięte o środku w punkcie [p] i promieniu [r] *)
 let kolko (xs, ys) r =
   let kartka (x, y) =
-    if (x -. xs)
+    if (sq (x -. xs)) + (sq (y -. ys)) <= sq r then 1
+    else 0
+
+(** Zwraca prostą zawierającą różne od siebie punkty p1 i p2  *)
+let prosta p1 p2 =
+
+(** Zwraca symetryczne odbicie punktu p względem prostej prost  *)
+let symetria p prost =
 
 (** Składa kartkę [k] wzdłuż prostej przechodzącej prze
     punkty [p1] i [p2] (muszą to być różne punkty). Papier jest składany
@@ -34,7 +41,14 @@ let kolko (xs, ys) r =
     co przebicie kartki przed złożeniem. Po stronie lewej -
     tyle co przed złożeniem plus przebicie rozłożonej kartki w punkcie,
     który nałożył się na punkt przebicia. *)
-let zlozPara k (p1, p2) =
+let zlozPara k ((x1, y1), (x2, y2)) =
+  if x1 = x2 then
+    (* pion *)
+    (* TODO: JAK JESTEŚ PO ZŁEJ STRONIE PROSTEJ TO NIE ODBIJASZ *)
+  else if x1 < x2 then
+    (* mniejsze od funkcji *)
+  else
+    (* większe od funkcji *)
 
 
 (** Wywołuje zlozPara odpowiednio dopasowując argumenty *)
