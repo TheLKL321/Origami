@@ -45,11 +45,11 @@ let przeciecie prost1 prost2 =
   let x = (snd prost2 -. snd prost1) /. (fst prost1 -. fst prost2)
   in 
     let y = fst prost1 *. x +. snd prost1
-    in
-      (x, y) 
+    in (x, y) 
 
-(*  Zwraca symetryczne odbicie punktu p względem prostej prost  *)
-let symetria p prost = 42
+(*  Zwraca symetryczne odbicie punktu p względem punktu s  *)
+let symetria p s = 
+  (2. *. fst s -. fst p, 2. *. snd s -. snd p)
 
 (*  Składa kartkę [k] wzdłuż prostej przechodzącej prze
     punkty [p1] i [p2] (muszą to być różne punkty). Papier jest składany
