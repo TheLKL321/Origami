@@ -51,6 +51,9 @@ let przeciecie prost1 prost2 =
 let symetria p s = 
   (2. *. fst s -. fst p, 2. *. snd s -. snd p)
 
+(*  Zwraca punkt będący odbiciem punktu p względem prostej l *)
+let odbij p l = symetria p (przeciecie l (prostopadla p (fst l)))
+
 (*  Składa kartkę [k] wzdłuż prostej przechodzącej prze
     punkty [p1] i [p2] (muszą to być różne punkty). Papier jest składany
     w ten sposób, że z prawej strony prostej (patrząc w kierunku od [p1] do [p2])
