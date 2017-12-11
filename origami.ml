@@ -1,5 +1,8 @@
 open List;;
 
+(*  @codeReviewer 
+    Czy mam precyzować że a <> infinity itp?
+    Czy jak napiszę fst p gdzie p to punkt to czy wiadomo że chodzi o x'ową? *)
 (*  Punkt na płaszczyźnie: (x, y) *)
 type point = float * float
 
@@ -31,21 +34,21 @@ let kolko (xs, ys) r =
     if (sq (x -. xs)) +. (sq (y -. ys)) <= sq r then 1
     else 0
 
-(*  Zwraca prostą przechodzącą przez punkt p, będącą prostą prostopadłą do
+(*  Zał: a <> 0
+    Zwraca prostą przechodzącą przez punkt p, będącą prostą prostopadłą do
     prostej o współczynniku kierunkowym a *)
 let prostopadla p a =
-  if a = 0 then (*  TODO: what now *)
   let kierunek = -1. /. a
   in (kierunek, -.(kierunek *. fst p) +. snd p)
 
-(*  Założenia: p1 <> p2
+(*  Zał: p1 <> p2, fst p2 <> fst p1
     Zwraca prostą zawierającą punkty p1 i p2  *)
 let prosta p1 p2 = 
   if fst p2 = fst p1 then (*  TODO: what now *)
   let kierunek = (snd p2 -. snd p1)/.(fst p2 -. fst p1)
   in (kierunek, -.(kierunek *. fst p1) +. snd p1)
 
-(*  Zał: prost1 prostopadła do prost2
+(*  Zał: fst prost1 <> fst prost2
     Zwraca punkt leżący na przecięciu prostych prost1 i prost2 *)
 let przeciecie prost1 prost2 = 
   let x = (snd prost2 -. snd prost1) /. (fst prost1 -. fst prost2)
@@ -53,11 +56,10 @@ let przeciecie prost1 prost2 =
     let y = fst prost1 *. x +. snd prost1
     in (x, y) 
 
-(*  Zał: p <> s
-    Zwraca symetryczne odbicie punktu p względem punktu s  *)
+(*  Zwraca symetryczne odbicie punktu p względem punktu s  *)
 let symetria p s = (2. *. fst s -. fst p, 2. *. snd s -. snd p)
 
-(* Zwraca punkt będący odbiciem punktu p względem prostej l *)
+(*  Zwraca punkt będący odbiciem punktu p względem prostej l *)
 let odbij p l = symetria p (przeciecie l (prostopadla p (fst l)))
 
 (*  Zał: (x1, y1) <> (x2, y2)
@@ -82,10 +84,8 @@ let zlozPara k ((x1, y1), (x2, y2)) =
 
 (*  Zał: p1 <> p2
     Wywołuje zlozPara odpowiednio dopasowując argumenty *)
-let zloz p1 p2 k =
-  zlozPara k (p1, p2)
+let zloz p1 p2 k = zlozPara k (p1, p2)
 
 (*  Składa kartkę k kolejno wzdłuż wszystkich prostych z listy l *)
-let skladaj l k =
-  fold_left zlozPara k l
+let skladaj l k = fold_left zlozPara k l
 ;;
