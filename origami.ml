@@ -13,25 +13,21 @@ type kartka = point -> int
 type prosta = float * float
 
 (*  Zał: x1 <= x2, y1 <= y2
-    Zwraca kartkę, reprezentującą domknięty prostokąt o bokach równoległych do
+    Zwraca kartkę w kształcie domkniętego prostokąta o bokach równoległych do
     osi układu współrzędnych i lewym dolnym rogu (x1, y1) a prawym górnym
-    (x2, y2). Gdy w kartkę tę wbije się szpilkę wewnątrz
-    (lub na krawędziach) prostokąta, kartka zostanie przebita 1 raz,
-    w pozostałych przypadkach 0 razy *)
+    (x2, y2). Po wbiciu szpilki wewnątrz (lub na krawędziach), kartka zostanie 
+    przebita 1 raz, w pozostałych przypadkach 0 razy *)
 let prostokat (x1, y1) (x2, y2) =
   fun (x, y) ->
     if x >= x1 && x <= x2 && y >= y1 && y <= y2 then 1
     else 0
 
-(*  Zwraca kwadrat danej liczby  *)
-let sq x = x *. x
-
 (*  Zał: r >= 0
-    Zwraca kartkę, reprezentującą kółko domknięte o środku w punkcie (xs, ys) i
+    Zwraca kartkę w kształcie koła domkniętego o środku w punkcie (xs, ys) i
     promieniu r *)
 let kolko (xs, ys) r =
   fun (x, y) ->
-    if (sq (x -. xs)) +. (sq (y -. ys)) <= sq r then 1
+    if (x -. xs) *. (x -. xs) +. (y -. ys) *. (y -. ys) <= sq r then 1
     else 0
 
 (*  Zał: a <> 0
@@ -44,7 +40,6 @@ let prostopadla p a =
 (*  Zał: p1 <> p2, fst p2 <> fst p1
     Zwraca prostą zawierającą punkty p1 i p2  *)
 let prosta p1 p2 = 
-  if fst p2 = fst p1 then (*  TODO: what now *)
   let kierunek = (snd p2 -. snd p1)/.(fst p2 -. fst p1)
   in (kierunek, -.(kierunek *. fst p1) +. snd p1)
 
@@ -64,17 +59,12 @@ let odbij p l = symetria p (przeciecie l (prostopadla p (fst l)))
 
 (*  Zał: (x1, y1) <> (x2, y2)
     Składa kartkę k wzdłuż prostej przechodzącej przez punkty (x1, y1) i 
-    (x2, y2). Papier jest składany w ten sposób, że z prawej strony prostej
-    (patrząc w kierunku od (x1, y1) do (x2, y2) jest przekładany na lewą.
-    Wynikiem funkcji jest złożona kartka. Jej przebicie po prawej stronie
-    prostej powinno więc zwrócić 0. Przebicie dokładnie na prostej powinno 
-    zwrócić tyle samo, co przebicie kartki przed złożeniem. Po stronie lewej -
-    tyle co przed złożeniem plus przebicie rozłożonej kartki w punkcie, który
-    nałożył się na punkt przebicia. *)
+    (x2, y2). Z prawej strony prostej (patrząc od (x1, y1) do (x2, y2)) papier 
+    jest przekładany na lewą. Przebicie dokładnie na prostej powinno zwrócić 
+    tyle, co przebicie przed złożeniem. *)
 let zlozPara k ((x1, y1), (x2, y2)) =
   if x1 = x2 then
     (* pion *) 42
-    (* TODO: CZY DZIAŁA Z MOIMI FUNKCJAMI *)
   else if y1 = y2 then
     (*  poziom *) 42
   else if x1 < x2 then
