@@ -93,4 +93,6 @@ test (p point) (1 lsl 20) "big 4";;
 
 let (point, l) = construct (0., 0.) (10., 10.) 15;;
 let p = skladaj l p1;;
-test (p point) (1 lsl 30) "big 4";;
+print_string "WAIT FOR IT...";
+;;
+test (p point) (1 lsl 30) "big 5";;
