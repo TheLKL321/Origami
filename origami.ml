@@ -27,7 +27,7 @@ let prostokat (x1, y1) (x2, y2) =
     promieniu r *)
 let kolko (xs, ys) r =
   fun (x, y) ->
-    if (x -. xs) *. (x -. xs) +. (y -. ys) *. (y -. ys) <= sq r then 1
+    if (x -. xs) *. (x -. xs) +. (y -. ys) *. (y -. ys) <= r *. r then 1
     else 0
 
 (*  Zał: a <> 0
@@ -54,28 +54,60 @@ let przeciecie prost1 prost2 =
 (*  Zwraca symetryczne odbicie punktu p względem punktu s  *)
 let symetria p s = (2. *. fst s -. fst p, 2. *. snd s -. snd p)
 
-(*  Zwraca punkt będący odbiciem punktu p względem prostej l *)
+(*  Zał: l nie jest prostopadła ani do osi ox ani do oy
+    Zwraca punkt będący odbiciem punktu p względem prostej l *)
 let odbij p l = symetria p (przeciecie l (prostopadla p (fst l)))
 
-(*  Zał: (x1, y1) <> (x2, y2)
+(*  Zwraca x/y punktu będącego odbiciem punktu o x/y'owej x1 względem prostej o
+    równaniu [x/y] = x2*)
+let odbijXY x1 cmp x2 = 
+  let wieksze =  x2 +. abs_float (x2 -. x1)
+  and mniejsze = x2 -. abs_float (x2 -. x1) 
+  in if cmp wieksze mniejsze then mniejsze else wieksze
+
+(*  Zał: p1 <> p2
     Składa kartkę k wzdłuż prostej przechodzącej przez punkty (x1, y1) i 
     (x2, y2). Z prawej strony prostej (patrząc od (x1, y1) do (x2, y2)) papier 
     jest przekładany na lewą. Przebicie dokładnie na prostej powinno zwrócić 
     tyle, co przebicie przed złożeniem. *)
-let zlozPara k ((x1, y1), (x2, y2)) =
-  if x1 = x2 then
-    (* pion *) 42
-  else if y1 = y2 then
-    (*  poziom *) 42
-  else if x1 < x2 then
-    (* mniejsze od funkcji *) 42
-  else
-    (* większe od funkcji *) 42
+let zloz p1 p2 k =
+  if fst p1 = fst p2 then
+    let cmp = if snd p1 < snd p2 then ( < ) else ( > )
+    in
+      fun (x, y) -> 
+        if cmp x (fst p1) then 
+          k (x, y) + k (odbijXY x cmp (fst p1), y)
+        else if x = fst p1 then 
+          k (x, y)
+        else 0
+  else if snd p1 = snd p2 then
+    let cmp = if fst p1 < fst p2 then ( > ) else ( < )
+    in
+      fun (x, y) -> 
+        if cmp y (snd p1) then
+          k (x, y) + k (x, odbijXY y cmp (snd p1))
+        else if y = snd p1 then 
+          k (x, y)
+        else 0
+  else 
+    let cmp = 
+      if fst p1 < fst p2 then ( > ) else ( < )
+    and prost = prosta p1 p2
+      in
+        fun (x, y) -> 
+          let zgiecie = fst prost *. x +. snd prost
+          in
+            if cmp y zgiecie then
+              k (x, y) + k (odbij (x, y) prost)
+            else if y = zgiecie then
+              k (x, y)
+            else 0 
 
 (*  Zał: p1 <> p2
-    Wywołuje zlozPara odpowiednio dopasowując argumenty *)
-let zloz p1 p2 k = zlozPara k (p1, p2)
+    Wywołuje zloz odpowiednio układając argumenty *)
+let zlozSkladaj k (p1, p2) = zloz p1 p2 k
 
-(*  Składa kartkę k kolejno wzdłuż wszystkich prostych z listy l *)
-let skladaj l k = fold_left zlozPara k l
+(*  Składa kartkę k kolejno wzdłuż wszystkich prostych z listy l (proste w 
+    liście są w postaci pary punktów przez nie przechodzących) *)
+let skladaj l k = fold_left zlozSkladaj k l
 ;;
