@@ -57,6 +57,12 @@ let symetria p s = (2. *. fst s -. fst p, 2. *. snd s -. snd p)
 (*  Zwraca punkt będący odbiciem punktu p względem prostej l *)
 let odbij p l = symetria p (przeciecie l (prostopadla p (fst l)))
 
+(*  Z *)
+let odbijPros x1 cmp x2 = 
+  let wieksze =  x2 +. abs_float (x2 -. x1)
+  and mniejsze = x2 -. abs_float (x2 -. x1) 
+  in if cmp wieksze mniejsze then mniejsze else wieksze
+
 (*  Zał: p1 <> p2
     Składa kartkę k wzdłuż prostej przechodzącej przez punkty (x1, y1) i 
     (x2, y2). Z prawej strony prostej (patrząc od (x1, y1) do (x2, y2)) papier 
@@ -68,23 +74,23 @@ let zloz p1 p2 k =
     in
       fun (x, y) -> 
         if cmp x (fst p1) then 
-          k (x, y) + k (abs_float (fst p1 -. x) +. x, y)
-        else if x = y then 
+          k (x, y) + k (odbijPros x cmp (fst p1), y)
+        else if x = fst p1 then 
           k (x, y)
         else 0
   else if snd p1 = snd p2 then
     let cmp = if fst p1 < fst p2 then ( > ) else ( < )
     in
       fun (x, y) -> 
-        if cmp y (snd p1) then 
-          k (x, y) + k (x, abs_float (snd p1 -. y) +. y)
-        else if x = y then 
+        if cmp y (snd p1) then
+          k (x, y) + k (x, odbijPros y cmp (snd p1))
+        else if y = snd p1 then 
           k (x, y)
         else 0
   else 
     let cmp = 
       if fst p1 < fst p2 then ( > ) else ( < )
-    and prost = prosta p1 p2
+      and prost = prosta p1 p2
       in
         fun (x, y) -> 
           let zgiecie = fst prost *. x +. snd prost
@@ -96,7 +102,7 @@ let zloz p1 p2 k =
             else 0 
 
 (*  Wywołuje zloz odpowiednio układając argumenty *)
-let zlozSkladaj k (p1, p2) = zloz p1 p1 k
+let zlozSkladaj k (p1, p2) = zloz p1 p2 k
 
 (*  Składa kartkę k kolejno wzdłuż wszystkich prostych z listy l (proste w 
     liście są w postaci pary punktów przez nie przechodzących) *)
