@@ -103,13 +103,11 @@ let zloz p1 p2 k =
               k (x, y)
             else 0 
 
-(*  Zał: p1 <> p2
-    Wywołuje zloz odpowiednio układając argumenty *)
-let zlozSkladaj k (p1, p2) = zloz p1 p2 k
-
 (*  Składa kartkę k kolejno wzdłuż wszystkich prostych z listy l (proste w 
     liście są w postaci pary punktów przez nie przechodzących) *)
-let skladaj l k = fold_left zlozSkladaj k l
+let skladaj l k = 
+  let pom k (p1, p2) = zloz p1 p2 k
+  in fold_left pom k l
 ;;
 
 (*  
