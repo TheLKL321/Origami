@@ -1,3 +1,6 @@
+(*  Autor: Łukasz Zarębski
+    Code review: Szymon Haponiuk *)
+
 open List;;
 
 (*  Punkt na płaszczyźnie: (x, y) *)
@@ -27,7 +30,7 @@ let kolko (xs, ys) r =
     if (x -. xs) *. (x -. xs) +. (y -. ys) *. (y -. ys) <= r *. r then 1
     else 0
 
-(*  Zał: a <> 0
+(*  Zał: a <> 0, a rzeczywisty
     Zwraca prostą przechodzącą przez punkt p, będącą prostą prostopadłą do
     prostej o współczynniku kierunkowym a *)
 let prostopadla p a =
@@ -37,7 +40,7 @@ let prostopadla p a =
 (*  Zał: p1 <> p2, fst p2 <> fst p1
     Zwraca prostą zawierającą punkty p1 i p2  *)
 let prosta p1 p2 = 
-  let kierunek = (snd p2 -. snd p1)/.(fst p2 -. fst p1)
+  let kierunek = (snd p2 -. snd p1) /. (fst p2 -. fst p1)
   in (kierunek, snd p1 -. (kierunek *. fst p1))
 
 (*  Zał: fst prost1 <> fst prost2
@@ -55,11 +58,12 @@ let symetria p s = (2. *. fst s -. fst p, 2. *. snd s -. snd p)
     Zwraca punkt będący odbiciem punktu p względem prostej l *)
 let odbij p l = symetria p (przeciecie l (prostopadla p (fst l)))
 
-(*  Zwraca x/y punktu będącego odbiciem punktu o x/y'owej x1 względem prostej o
-    równaniu [x/y] = x2*)
-let odbijXY x1 cmp x2 = 
-  let wieksze =  x2 +. abs_float (x2 -. x1)
-  and mniejsze = x2 -. abs_float (x2 -. x1) 
+(*  Zwraca x/y punktu będącego odbiciem punktu o x/y'owej xy1 względem prostej o
+    równaniu [x/y] = xy2. Argument cmp określa z której strony prostej odbijamy
+    *)
+let odbijXY xy1 cmp xy2 = 
+  let wieksze =  xy2 +. abs_float (xy2 -. xy1)
+  and mniejsze = xy2 -. abs_float (xy2 -. xy1) 
   in if cmp wieksze mniejsze then mniejsze else wieksze
 
 (*  Zał: p1 <> p2
@@ -69,6 +73,8 @@ let odbijXY x1 cmp x2 =
     tyle, co przebicie przed złożeniem. *)
 let zloz p1 p2 k =
   if fst p1 = fst p2 then
+  (*  Prosta pozioma *)
+    (*  Określamy na którą stronę składamy *)
     let cmp = if snd p1 < snd p2 then ( < ) else ( > )
     in
       fun (x, y) -> 
@@ -78,6 +84,7 @@ let zloz p1 p2 k =
           k (x, y)
         else 0
   else if snd p1 = snd p2 then
+  (*  Prosta pionowa *)
     let cmp = if fst p1 < fst p2 then ( > ) else ( < )
     in
       fun (x, y) -> 
@@ -87,18 +94,20 @@ let zloz p1 p2 k =
           k (x, y)
         else 0
   else 
+  (*  Pozostałe przypadki *)
     let cmp = 
       if fst p1 < fst p2 then ( > ) else ( < )
     and prost = prosta p1 p2
-      in
-        fun (x, y) -> 
-          let zgiecie = fst prost *. x +. snd prost
-          in
-            if cmp y zgiecie then
-              k (x, y) + k (odbij (x, y) prost)
-            else if y = zgiecie then
-              k (x, y)
-            else 0 
+    in
+      fun (x, y) -> 
+        (*  Obliczamy wartość funkcji prostej dla danego x *)
+        let zgiecie = fst prost *. x +. snd prost
+        in
+          if cmp y zgiecie then
+            k (x, y) + k (odbij (x, y) prost)
+          else if y = zgiecie then
+            k (x, y)
+          else 0 
 
 (*  Składa kartkę k kolejno wzdłuż wszystkich prostych z listy l (proste w 
     liście są w postaci pary punktów przez nie przechodzących) *)
