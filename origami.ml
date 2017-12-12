@@ -1,8 +1,5 @@
 open List;;
 
-(*  @codeReviewer 
-    Czy mam precyzować że a <> infinity itp?
-    Czy jak napiszę fst p gdzie p to punkt to czy wiadomo że chodzi o x'ową? *)
 (*  Punkt na płaszczyźnie: (x, y) *)
 type point = float * float
 
@@ -35,13 +32,13 @@ let kolko (xs, ys) r =
     prostej o współczynniku kierunkowym a *)
 let prostopadla p a =
   let kierunek = -1. /. a
-  in (kierunek, -.(kierunek *. fst p) +. snd p)
+  in (kierunek, snd p -. (kierunek *. fst p))
 
 (*  Zał: p1 <> p2, fst p2 <> fst p1
     Zwraca prostą zawierającą punkty p1 i p2  *)
 let prosta p1 p2 = 
   let kierunek = (snd p2 -. snd p1)/.(fst p2 -. fst p1)
-  in (kierunek, -.(kierunek *. fst p1) +. snd p1)
+  in (kierunek, snd p1 -. (kierunek *. fst p1))
 
 (*  Zał: fst prost1 <> fst prost2
     Zwraca punkt leżący na przecięciu prostych prost1 i prost2 *)
