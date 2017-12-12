@@ -1,4 +1,4 @@
 #use "testy/agluszak.ml";;
 #use "testy/test1.ml";;
 #use "testy/test2.ml";;
-#use "testy/tkanas";;
+#use "testy/tkanas.ml";;
